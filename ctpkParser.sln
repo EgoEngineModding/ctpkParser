@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctpkParser", "ctpkParser\ctpkParser.csproj", "{C3DA7598-B3E0-41BB-B8BC-ED2192C5A3A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctpkLib", "ctpkLib\ctpkLib.csproj", "{3296B058-5032-4471-A47E-4E6E110B3146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctpkTools", "ctpkTools\ctpkTools.csproj", "{6BD18238-7F97-4554-9ABD-4F3A506C6BAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3DA7598-B3E0-41BB-B8BC-ED2192C5A3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3DA7598-B3E0-41BB-B8BC-ED2192C5A3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3DA7598-B3E0-41BB-B8BC-ED2192C5A3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3DA7598-B3E0-41BB-B8BC-ED2192C5A3A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3296B058-5032-4471-A47E-4E6E110B3146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3296B058-5032-4471-A47E-4E6E110B3146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3296B058-5032-4471-A47E-4E6E110B3146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3296B058-5032-4471-A47E-4E6E110B3146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BD18238-7F97-4554-9ABD-4F3A506C6BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BD18238-7F97-4554-9ABD-4F3A506C6BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BD18238-7F97-4554-9ABD-4F3A506C6BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BD18238-7F97-4554-9ABD-4F3A506C6BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {062E8835-5777-4D42-BACF-ABC25D71330C}
+	EndGlobalSection
+EndGlobal
