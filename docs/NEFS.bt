@@ -1,0 +1,45 @@
+//------------------------------------------------
+//--- 010 Editor v10.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 4E 65 46 53
+//   History: 
+//------------------------------------------------
+
+struct HEADER {
+    char magic[4];
+    ubyte  hash[0x20];
+    char   aes_key[0x40];
+    uint32 size;
+    uint32 unkown;
+    uint32 n_items;
+    uint32 unk1;
+    char   compression_alg[4];
+    uint64 unk2;
+    uint16 n_p5;
+    uint16 data_chunk_size;
+    uint32 offset_p1;
+    uint32 offset_p6;
+    uint32 offset_p2;
+    uint32 offset_p7;
+    uint32 offset_p3;
+    uint32 offset_p4;
+    uint32 offset_p5;
+    uint32 offset_p8;
+    ubyte unkown2[0x5C];
+} header;
+
+FSeek(header.offset_p5);
+
+struct HEADER_P5 {
+    uint64 archive_size;
+    uint32 unkown;
+    uint32 data_start;
+};
+
+HEADER_P5 header_p5[header.n_p5];

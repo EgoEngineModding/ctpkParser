@@ -1,0 +1,80 @@
+//------------------------------------------------
+//--- 010 Editor v9.0.2 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 43 54 50 4B
+//   History: 
+//------------------------------------------------
+
+
+struct HEADER  {
+    char    magic[4];
+    uint32  unkown;
+    uint32  unkown <comment = "used in section parsing">;
+    uint32  StringOffset;
+    uint32  DataOffset;
+    uint32  unkown;
+}  header;
+
+FSeek(header.StringOffset);
+
+typedef struct {
+            uint stringLen<hidden=true>;
+            char str[stringLen];
+        } FString <read=FStringRead, size=FStringSize>;
+
+int FStringSize( FString &f )
+{
+    return 4 + ReadUInt(startof(f));
+}
+
+string FStringRead( FString &f )
+{
+    string s;
+    if (f.stringLen > 0) {
+        s = f.str;
+    }
+    else {
+        s = "";
+    }
+    return s;
+}
+
+
+struct STRINGS {
+    uint32 nStrings;
+    local int i;
+    for ( i = 0; i < nStrings; i++)
+    {
+         FString str;
+    }
+} strings;
+
+FSeek(header.DataOffset);
+
+struct DATA {
+    uint32 nSections;
+    struct {
+        uint32 sectionID;
+        uint32 sectionOffset;
+        local int64 cPos = FTell();
+        FSeek(sectionOffset);
+        struct {
+            uint32 nObjects;
+            local int i;
+            for (i = 0; i < nObjects; i++) {
+                struct {
+                    uint32 id;
+                    uint32 objLen;
+                    ubyte data[objLen];
+                } object;
+            }
+        } sectionData;
+        FSeek(cPos);
+    } Section[nSections] <optimize=false>;
+} data;
