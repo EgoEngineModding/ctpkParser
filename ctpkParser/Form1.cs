@@ -56,13 +56,13 @@ namespace ctpkParser
                 foreach (var obj in sectionMap.Value)
                 {
                     var objNode = node.Nodes.Add(string.Format("{0} - {1:X08}", obj.Id, obj.Offset));
-                    AddNodes(obj, ref objNode);
+                    AddNodes(obj, ref objNode, 0);
                 }
                 i++;
             }
         }
 
-        private void AddNodes(CatalogueObject obj, ref TreeNode nodes)
+        private void AddNodes(CatalogueObject obj, ref TreeNode nodes, int depth)
         {
             var fields = obj.Map.GetType().GetFields();
             foreach (var field in fields)
@@ -79,14 +79,16 @@ namespace ctpkParser
                 else if (isObject)
                 {
                     MappedObject attr = field.GetCustomAttribute<MappedObject>();
+
+
                     UInt32 sectionId = attr.SectionId;
                     UInt32 objId = (uint)field.GetValue(obj.Map);
                     CatalogueObject refObj = lib.GetObject(sectionId, objId);
 
                     TreeNode parent = nodes.Nodes.Add(string.Format("{0}: {1} ({2})", field.Name, field.GetValue(obj.Map), refObj?.GetName() ?? lib.GetString(sectionId) ?? ""));
 
-                    if (refObj != null)
-                        AddNodes(refObj, ref parent);
+                    if (refObj != null && depth < 1)
+                        AddNodes(refObj, ref parent, depth + 1);
                 }
                 else
                 {

@@ -14,10 +14,25 @@ namespace ctpkLib
         CTPKLib _lib;
 
         Dictionary<UInt32, List<CatalogueObject>> _objects;
+        Dictionary<UInt32, Type> _objectTypes;
 
         public CatalogueObjects(CTPKLib lib, BinaryReader r)
         {
             _lib = lib;
+
+            var types = Assembly.GetExecutingAssembly()
+                                         .GetTypes()
+                                         .Where(t => t.IsSubclassOf(typeof(CatalogueObject)));
+
+            _objectTypes = new Dictionary<uint, Type>(types.Count());
+            foreach (var type in types)
+            {
+                Section sectionAttr = type.GetCustomAttribute<Section>();
+
+                if (sectionAttr != null)
+                    _objectTypes[sectionAttr.Id] = type;
+            }
+
             _nSections = r.ReadUInt32();
             _objects = new Dictionary<uint, List<CatalogueObject>>((int)_nSections);
 
@@ -51,7 +66,27 @@ namespace ctpkLib
             
         }
 
-        static public CatalogueObject MakeObject(CTPKLib lib, UInt32 sectionId, BinaryReader r)
+
+        public CatalogueObject MakeObject(CTPKLib lib, UInt32 sectionId, BinaryReader r)
+        {
+            Type targetType;
+
+            var pos = r.BaseStream.Position;
+            if (!_objectTypes.TryGetValue(sectionId, out targetType))
+                return new CatalogueObject(lib, sectionId, r);
+
+            try
+            {
+                return Activator.CreateInstance(targetType, lib, sectionId, r) as CatalogueObject;
+            }
+            catch (Exception)
+            {
+                r.BaseStream.Seek(pos, SeekOrigin.Begin);
+                return new CatalogueObject(lib, sectionId, r);
+            }
+        }
+
+        static public CatalogueObject MakeObjectStatic(CTPKLib lib, UInt32 sectionId, BinaryReader r)
         {
             var targetType = Assembly.GetExecutingAssembly()
                          .GetTypes()
@@ -59,10 +94,28 @@ namespace ctpkLib
                                 t.GetCustomAttribute<Section>()?.Id == sectionId)
                          .FirstOrDefault();
 
+            var pos = r.BaseStream.Position;
             if (targetType == null)
                 return new CatalogueObject(lib, sectionId, r);
 
-            return Activator.CreateInstance(targetType, lib, sectionId, r) as CatalogueObject;
+            try
+            {
+                return Activator.CreateInstance(targetType, lib, sectionId, r) as CatalogueObject;
+            }
+            catch (Exception)
+            {
+                r.BaseStream.Seek(pos, SeekOrigin.Begin);
+                return new CatalogueObject(lib, sectionId, r);
+            }
+        }
+
+        public Type getSectionType(UInt32 sectionId)
+        {
+            Type t;
+            if (_objectTypes.TryGetValue(sectionId, out t))
+                return t;
+
+            return null;
         }
 
         public Dictionary<UInt32, List<CatalogueObject>> ObjectMap { get { return _objects; } }

@@ -29,19 +29,43 @@ namespace ctpkLib
         public MappedObject(Type objType)
         { 
             _objType = objType;
-            _sectionId = _objType.GetCustomAttribute<Section>()?.Id ?? 0;
+            _sectionId = _objType.GetCustomAttribute<Section>(false)?.Id ?? 0;
         }
+        
         public MappedObject(UInt32 objTypeId)
         {
             _sectionId = objTypeId;
+            //_objType = Assembly.GetExecutingAssembly()
+            // .GetTypes()
+            // .Where(t => t.IsSubclassOf(typeof(CatalogueObject)) &&
+            //        t.GetCustomAttribute<Section>(false)?.Id == objTypeId)
+            // .FirstOrDefault();
+        }
+
+        public Type GetObjType()
+        {
+            if (_objType != null)
+                return _objType;
+
             _objType = Assembly.GetExecutingAssembly()
              .GetTypes()
              .Where(t => t.IsSubclassOf(typeof(CatalogueObject)) &&
-                    t.GetCustomAttribute<Section>()?.Id == objTypeId)
+                    t.GetCustomAttribute<Section>(false)?.Id == _sectionId)
              .FirstOrDefault();
+
+            return _objType;
+        }
+
+        public Type GetObjType(CTPKLib lib)
+        {
+            if (_objType != null)
+                return _objType;
+
+            _objType = lib.Objects.getSectionType(SectionId);
+            return _objType;
         }
 
         public UInt32 SectionId { get { return _sectionId; } }
-        public Type ObjType { get { return _objType; } }
+        //public Type ObjType { get { return _objType; } }
     }
 }
